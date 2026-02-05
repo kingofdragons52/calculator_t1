@@ -33,7 +33,7 @@ public class Calculator extends JFrame {
 
             digitbuttons[i].addActionListener(e -> {
                 String current = text.getText();
-                if (current.equals("Поле для ввода")) {
+                if (current.equals("Введите число")) {
                     text.setText(String.valueOf(digit));
                 } else {
                     text.setText(current + digit);
@@ -88,9 +88,16 @@ public class Calculator extends JFrame {
                 text.setText(String.valueOf(result));
         });
 
-        bBackspace.addActionListener(e ->
-                text.setText(text.getText() + "BckSpc"));
+        bBackspace.addActionListener(e -> {
+            String deleted = text.getText();
+            if (deleted.equals("Введите число")) {
+                return;
+            }
+            if (deleted.length() > 0) {
+                text.setText(deleted.substring(0, deleted.length() - 1));
+            }
 
+        });
 
         for (JButton button : operatorButtons) {
             button.setBackground(Color.LIGHT_GRAY);
@@ -124,7 +131,7 @@ public class Calculator extends JFrame {
 
 
 
-        text = new JTextField("Поле для ввода");
+        text = new JTextField("Введите число");
         Font font = new Font("Arial", Font.BOLD, 18);
         text.setForeground(Color.WHITE);
         text.setFont(font);
