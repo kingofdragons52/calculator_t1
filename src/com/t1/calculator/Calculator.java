@@ -7,7 +7,8 @@ import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Calculator extends JFrame implements ActionListener{
+public class Calculator extends JFrame {
+
 
     private JButton[] digitbuttons;
     private JButton[] operators;
@@ -28,8 +29,18 @@ public class Calculator extends JFrame implements ActionListener{
         digitbuttons = new JButton[10];
         for (int i = 0; i <= 9; i++) {
             digitbuttons[i] = new JButton(String.valueOf(i));
-            digitbuttons[i].addActionListener(this);
+            int digit = i;
+
+            digitbuttons[i].addActionListener(e -> {
+                String current = text.getText();
+                if (current.equals("Поле для ввода")) {
+                    text.setText(String.valueOf(digit));
+                } else {
+                    text.setText(current + digit);
+                }
+            });
             digitbuttons[i].setBackground(Color.LIGHT_GRAY);
+
         }
 
         bPlus = new JButton("+");
@@ -43,29 +54,63 @@ public class Calculator extends JFrame implements ActionListener{
         bEquals = new JButton("=");
         bBackspace = new JButton("BckSpc");
 
+
         JButton[] operatorButtons = {bPlus, bMinus, bMultiply, bDivide,  bReciprocal, bSquare, bSqrt, bComma, bEquals, bBackspace};
+
+
+        bPlus.addActionListener(e ->
+                text.setText(text.getText() + "+"));
+
+        bMinus.addActionListener(e ->
+                text.setText(text.getText() + "-"));
+
+        bMultiply.addActionListener(e ->
+                text.setText(text.getText() + "*"));
+
+        bDivide.addActionListener(e ->
+                text.setText(text.getText() + "/"));
+
+        bReciprocal.addActionListener(e ->
+                text.setText(text.getText() + "1/x"));
+
+        bSquare.addActionListener(e ->
+                text.setText(text.getText() + "x²"));
+
+        bSqrt.addActionListener(e ->
+                text.setText(text.getText() + "√"));
+
+        bComma.addActionListener(e ->
+                text.setText(text.getText() + ","));
+
+        bEquals.addActionListener(e -> {
+                String expression = text.getText();
+                double result = ExpressionParser.evaluate(expression);
+                text.setText(String.valueOf(result));
+        });
+
+        bBackspace.addActionListener(e ->
+                text.setText(text.getText() + "BckSpc"));
+
+
         for (JButton button : operatorButtons) {
-            button.addActionListener(this);
             button.setBackground(Color.LIGHT_GRAY);
-        }
+        };
+
 
         panel.add(bReciprocal);
         panel.add(bSquare);
         panel.add(bSqrt);
         panel.add(bBackspace);
 
-
         panel.add(digitbuttons[1]);
         panel.add(digitbuttons[2]);
         panel.add(digitbuttons[3]);
         panel.add(bPlus);
 
-
         panel.add(digitbuttons[4]);
         panel.add(digitbuttons[5]);
         panel.add(digitbuttons[6]);
         panel.add(bMinus);
-
 
         panel.add(digitbuttons[7]);
         panel.add(digitbuttons[8]);
@@ -90,9 +135,5 @@ public class Calculator extends JFrame implements ActionListener{
 
 
     }
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String buttontext = e.getActionCommand();
-        System.out.println(buttontext + "кнопка нажата");
-    }
+
 }
