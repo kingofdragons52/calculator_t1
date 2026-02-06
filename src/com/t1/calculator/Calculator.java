@@ -33,7 +33,7 @@ public class Calculator extends JFrame {
 
             digitbuttons[i].addActionListener(e -> {
                 String current = text.getText();
-                if (current.equals("Введите число")) {
+                if (current.equals("0")) {
                     text.setText(String.valueOf(digit));
                 } else {
                     text.setText(current + digit);
@@ -59,8 +59,9 @@ public class Calculator extends JFrame {
 
 
         bPlus.addActionListener(e -> {
-            if (text.getText().equals("Введите число")) {
-                text.setText("+");
+            String current = text.getText();
+            if (current.equals("0")) {
+                text.setText(current + "+");
             } else {
                 text.setText(text.getText() + "+");
             }
@@ -69,68 +70,47 @@ public class Calculator extends JFrame {
 
         bMinus.addActionListener(e -> {
             String current = text.getText();
-            if (current.equals("Введите число")) {
-                text.setText("-");
-            } else {
+            if (current.equals("0")) {
                 text.setText(current + "-");
+            } else {
+                text.setText(text.getText() + "-");
             }
         });
 
         bMultiply.addActionListener(e -> {
             String current = text.getText();
-            if (current.equals("Введите число")) {
-                text.setText("*");
-            } else {
+            if (current.equals("0")) {
                 text.setText(current + "*");
+            } else {
+                text.setText(text.getText() + "*");
             }
         });
 
         bDivide.addActionListener(e -> {
             String current = text.getText();
-            if (current.equals("Введите число")) {
-                text.setText("/");
-            } else {
+            if (current.equals("0")) {
                 text.setText(current + "/");
-            }
-        });
-
-        bReciprocal.addActionListener(e ->
-        {
-            String current = text.getText();
-            if (current.equals("Введите число")) {
-                text.setText("1/x");
             } else {
-                text.setText(current + "1/x");
+                text.setText(text.getText() + "/");
             }
         });
 
         bSquare.addActionListener(e ->
-        {
-            String current = text.getText();
-            if (current.equals("Введите число")) {
-                text.setText("x²");
-            } else {
-                text.setText(current + "x²");
-            }
-        });
+                text.setText(text.getText() + "²"));
 
         bSqrt.addActionListener(e ->
-        {
-            String current = text.getText();
-            if (current.equals("Введите число")) {
-                text.setText("√");
-            } else {
-                text.setText(current + "√");
-            }
-        });
+                text.setText("√(" + text.getText() + ")"));
 
-        bComma.addActionListener(e ->
-        {
+        bReciprocal.addActionListener(e ->
+                text.setText("1/(" + text.getText() + ")"));
+
+
+        bComma.addActionListener(e -> {
             String current = text.getText();
-            if (current.equals("Введите число")) {
-                text.setText("*");
+            if (current.equals("0")) {
+                text.setText(current + ",");
             } else {
-                text.setText(current + "*");
+                text.setText(text.getText() + ",");
             }
         });
 
@@ -142,8 +122,8 @@ public class Calculator extends JFrame {
 
         bBackspace.addActionListener(e -> {
             String deleted = text.getText();
-            if (deleted.equals("Введите число")) {
-                return;
+            if (deleted.equals("0")) {
+                text.setText(deleted.substring(0, deleted.length() - 1));
             }
             if (deleted.length() > 0) {
                 text.setText(deleted.substring(0, deleted.length() - 1));
@@ -183,7 +163,7 @@ public class Calculator extends JFrame {
 
 
 
-        text = new JTextField("Введите число");
+        text = new JTextField("0");
         Font font = new Font("Arial", Font.BOLD, 18);
         text.setForeground(Color.WHITE);
         text.setFont(font);
