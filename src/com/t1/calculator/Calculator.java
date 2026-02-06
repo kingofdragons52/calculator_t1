@@ -58,29 +58,81 @@ public class Calculator extends JFrame {
         JButton[] operatorButtons = {bPlus, bMinus, bMultiply, bDivide,  bReciprocal, bSquare, bSqrt, bComma, bEquals, bBackspace};
 
 
-        bPlus.addActionListener(e ->
-                text.setText(text.getText() + "+"));
+        bPlus.addActionListener(e -> {
+            if (text.getText().equals("Введите число")) {
+                text.setText("+");
+            } else {
+                text.setText(text.getText() + "+");
+            }
+        });
 
-        bMinus.addActionListener(e ->
-                text.setText(text.getText() + "-"));
 
-        bMultiply.addActionListener(e ->
-                text.setText(text.getText() + "*"));
+        bMinus.addActionListener(e -> {
+            String current = text.getText();
+            if (current.equals("Введите число")) {
+                text.setText("-");
+            } else {
+                text.setText(current + "-");
+            }
+        });
 
-        bDivide.addActionListener(e ->
-                text.setText(text.getText() + "/"));
+        bMultiply.addActionListener(e -> {
+            String current = text.getText();
+            if (current.equals("Введите число")) {
+                text.setText("*");
+            } else {
+                text.setText(current + "*");
+            }
+        });
+
+        bDivide.addActionListener(e -> {
+            String current = text.getText();
+            if (current.equals("Введите число")) {
+                text.setText("/");
+            } else {
+                text.setText(current + "/");
+            }
+        });
 
         bReciprocal.addActionListener(e ->
-                text.setText(text.getText() + "1/x"));
+        {
+            String current = text.getText();
+            if (current.equals("Введите число")) {
+                text.setText("1/x");
+            } else {
+                text.setText(current + "1/x");
+            }
+        });
 
         bSquare.addActionListener(e ->
-                text.setText(text.getText() + "x²"));
+        {
+            String current = text.getText();
+            if (current.equals("Введите число")) {
+                text.setText("x²");
+            } else {
+                text.setText(current + "x²");
+            }
+        });
 
         bSqrt.addActionListener(e ->
-                text.setText(text.getText() + "√"));
+        {
+            String current = text.getText();
+            if (current.equals("Введите число")) {
+                text.setText("√");
+            } else {
+                text.setText(current + "√");
+            }
+        });
 
         bComma.addActionListener(e ->
-                text.setText(text.getText() + ","));
+        {
+            String current = text.getText();
+            if (current.equals("Введите число")) {
+                text.setText("*");
+            } else {
+                text.setText(current + "*");
+            }
+        });
 
         bEquals.addActionListener(e -> {
                 String expression = text.getText();
