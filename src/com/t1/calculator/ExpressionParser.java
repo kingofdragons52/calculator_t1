@@ -7,53 +7,69 @@ public class ExpressionParser {
         if (expression.isEmpty()) {
             return 0.0;
         }
+        return parseExp(expression);
+    }
 
-        if (expression.contains("+")) {
-            String[] parts = expression.split("\\+");
-            double result = Double.parseDouble(parts[0]);
-            // double result = 0;
-            for (String part: parts) {
-                result += Double.parseDouble(part);
+    public static double parseExp(String exp) {                // + и -
+        exp = exp.trim();
+        if (exp.startsWith("-")) {
+            return -parseExp(exp.substring(1));
+        }
+        for (int i = exp.length() - 1; i >= 0; i--) {
+            char ch = exp.charAt(i);
+
+            if (ch == '+') {
+                double left = parseExp(exp.substring(0, i));
+                double right = parseTerm(exp.substring(i + 1));
+                return left + right;
             }
-            return result;
 
+            if (ch == '-') {
+                double left = parseExp(exp.substring(0, i));
+                double right = parseTerm(exp.substring(i + 1));
+                return left - right;
+            }
+        }
+        return parseTerm(exp);
+    }
+
+    public static double parseTerm(String exp) {                   // * и /
+        exp = exp.trim();
+        for (int i = exp.length() - 1; i >= 0; i--) {
+            char ch = exp.charAt(i);
+
+            if (ch == '*') {
+                double left = parseExp(exp.substring(0, i));
+                double right = parseTerm(exp.substring(i + 1));
+                return left * right;
+            }
+
+            if (ch == '/') {
+                double left = parseExp(exp.substring(0, i));
+                double right = parseTerm(exp.substring(i + 1));
+                if (right == 0) {
+                    throw new ArithmeticException("Деление на ноль");
+                }
+                return left / right;
+            }
+        }
+        return parseFactor(exp);
+    }
+
+    public static double parseFactor(String exp) {           // скобки, унарный минус
+        exp = exp.trim();
+        if (exp.startsWith("-")) {
+            return -parseExp(exp.substring(1, exp.length() - 1));
         }
 
-        if (expression.contains("-")) {
-            String[] parts = expression.split("-");
-
-            double result = Double.parseDouble(parts[0]);
-            for (int i = 1; i < parts.length; i++) {
-                result -=Double.parseDouble(parts[i]);
-            }
-            return result;
+        if (exp.startsWith("(") && exp.endsWith(")")) {
+            return parseExp(exp.substring(1, exp.length() -1));
         }
-
-        if (expression.contains("×")) {
-            String[] parts = expression.split("×");
-
-            double result = 1;
-            for (String part: parts) {
-                result *=Double.parseDouble(part);
-            }
-            return result;
-        }
-
-        if (expression.contains("/")) {
-            String[] parts = expression.split("/");
-
-            double result = Double.parseDouble(parts[0]);
-            for (int i = 1; i < parts.length; i++) {
-                result /=Double.parseDouble(parts[i]);
-            }
-            return result;
-        }
-
-
         try {
-            return Double.parseDouble(expression);
-        } catch (Exception e) {
-            return 42.0;
+            return Double.parseDouble(exp);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Неверное число: " + exp);
         }
     }
+
 }

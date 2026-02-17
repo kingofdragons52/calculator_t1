@@ -14,7 +14,11 @@ public class Calculator extends JFrame {
     // private JButton[] operators;
     //private String first = "", operator = "", second = "";
     private JTextField text;
-    private JButton bPlus, bMinus, bMultiply, bDivide, bReciprocal, bSquare, bSqrt, bComma, bEquals, bBackspace, bracketRight, bracketLeft, clear, percent, sin, cos, log, degree, e, pi;
+    private JButton bPlus, bMinus, bMultiply, bDivide,
+            bReciprocal, bSquare, bSqrt, bComma,
+            bEquals, bBackspace, bracketRight,
+            bracketLeft, clear, percent,
+            sin, cos, log, degree, e, pi;
 
 
 
@@ -22,6 +26,10 @@ public class Calculator extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 400);
         setLocationRelativeTo(null);
+
+        String courses[] = { "Обычный","Инженерный"};
+        JComboBox c = new JComboBox(courses);
+        // panel.add(c);
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(6, 4, 1, 1));
