@@ -4,67 +4,56 @@ public class ExpressionParser {
     public static double evaluate(String expression) {
         expression = expression.trim();
 
-        // Если пустая строка
         if (expression.isEmpty()) {
             return 0.0;
         }
 
-        // Пробуем разобрать выражение
         if (expression.contains("+")) {
-            // Пример: "2+3" → разделяем по "+"
-            String[] parts = expression.split("\\+"); // \\+ потому что + спецсимвол
-
-            try {
-                double a = Double.parseDouble(parts[0]); // "2" → 2.0
-                double b = Double.parseDouble(parts[1]); // "3" → 3.0
-                return a + b; // 5.0
-            } catch (Exception e) {
-                return 42.0; // если ошибка
+            String[] parts = expression.split("\\+");
+            double result = Double.parseDouble(parts[0]);
+            // double result = 0;
+            for (String part: parts) {
+                result += Double.parseDouble(part);
             }
+            return result;
+
         }
 
         if (expression.contains("-")) {
             String[] parts = expression.split("-");
 
-            try {
-                double a = Double.parseDouble(parts[0]);
-                double b = Double.parseDouble(parts[1]);
-                return a - b;
-            } catch (Exception e) {
-                return 52.0;
+            double result = Double.parseDouble(parts[0]);
+            for (int i = 1; i < parts.length; i++) {
+                result -=Double.parseDouble(parts[i]);
             }
+            return result;
         }
 
-        if (expression.contains("*")) {
-            String[] parts = expression.split("\\*");
+        if (expression.contains("×")) {
+            String[] parts = expression.split("×");
 
-            try {
-                double a = Double.parseDouble(parts[0]);
-                double b = Double.parseDouble(parts[1]);
-                return a * b;
-            } catch (Exception e) {
-                return 42.0;
+            double result = 1;
+            for (String part: parts) {
+                result *=Double.parseDouble(part);
             }
+            return result;
         }
 
         if (expression.contains("/")) {
             String[] parts = expression.split("/");
 
-            try {
-                double a = Double.parseDouble(parts[0]);
-                double b = Double.parseDouble(parts[1]);
-                return a / b;
-            } catch (Exception e) {
-                return 42.0;
+            double result = Double.parseDouble(parts[0]);
+            for (int i = 1; i < parts.length; i++) {
+                result /=Double.parseDouble(parts[i]);
             }
+            return result;
         }
 
 
-        // Если не нашли "+", пробуем как просто число
         try {
-            return Double.parseDouble(expression); // "123" → 123.0
+            return Double.parseDouble(expression);
         } catch (Exception e) {
-            return 42.0; // заглушка
+            return 42.0;
         }
     }
 }

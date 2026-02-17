@@ -11,10 +11,11 @@ public class Calculator extends JFrame {
 
 
     private JButton[] digitbuttons;
-    private JButton[] operators;
-    private String first = "", operator = "", second = "";
+    // private JButton[] operators;
+    //private String first = "", operator = "", second = "";
     private JTextField text;
-    private JButton bPlus, bMinus, bMultiply, bDivide, bReciprocal, bSquare, bSqrt, bComma, bEquals, bBackspace;
+    private JButton bPlus, bMinus, bMultiply, bDivide, bReciprocal, bSquare, bSqrt, bComma, bEquals, bBackspace, bracketRight, bracketLeft, clear, percent, sin, cos, log, degree, e, pi;
+
 
 
     public Calculator(){
@@ -23,7 +24,7 @@ public class Calculator extends JFrame {
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 4, 1, 1));
+        panel.setLayout(new GridLayout(6, 4, 1, 1));
         panel.setBackground(Color.black);
 
         digitbuttons = new JButton[10];
@@ -45,17 +46,27 @@ public class Calculator extends JFrame {
 
         bPlus = new JButton("+");
         bMinus = new JButton("-");
-        bMultiply = new JButton("*");
+        bMultiply = new JButton("×");
         bDivide = new JButton("/");
         bReciprocal = new JButton("1/x");
         bSquare = new JButton("x²");
         bSqrt = new JButton("√");
         bComma = new JButton(",");
         bEquals = new JButton("=");
-        bBackspace = new JButton("BckSpc");
+        bBackspace = new JButton("⌫");
+        bracketRight = new JButton("(");
+        bracketLeft = new JButton(")");
+        percent = new JButton("%");
+        clear = new JButton("C");
+        sin = new JButton("sin");
+        cos = new JButton("cos");
+        log = new JButton("log");
+        degree = new JButton("x^y");
+        e = new JButton("e");
+        pi = new JButton("π");
 
 
-        JButton[] operatorButtons = {bPlus, bMinus, bMultiply, bDivide,  bReciprocal, bSquare, bSqrt, bComma, bEquals, bBackspace};
+        JButton[] operatorButtons = {bPlus, bMinus, bMultiply, bDivide,  bReciprocal, bSquare, bSqrt, bComma, bEquals, bBackspace, bracketLeft, bracketRight, percent, clear, sin, cos, log, degree, e, pi };
 
 
         bPlus.addActionListener(e -> {
@@ -80,9 +91,9 @@ public class Calculator extends JFrame {
         bMultiply.addActionListener(e -> {
             String current = text.getText();
             if (current.equals("0")) {
-                text.setText(current + "*");
+                text.setText(current + "×");
             } else {
-                text.setText(text.getText() + "*");
+                text.setText(text.getText() + "×");
             }
         });
 
@@ -114,13 +125,13 @@ public class Calculator extends JFrame {
             }
         });
 
-        bEquals.addActionListener(e -> {
+        bEquals.addActionListener(e -> {                           // =
                 String expression = text.getText();
                 double result = ExpressionParser.evaluate(expression);
                 text.setText(String.valueOf(result));
         });
 
-        bBackspace.addActionListener(e -> {
+        bBackspace.addActionListener(e -> {                       // BckSpc
             String deleted = text.getText();
             if (deleted.equals("0")) {
                 text.setText(deleted.substring(0, deleted.length() - 1));
@@ -131,9 +142,63 @@ public class Calculator extends JFrame {
 
         });
 
+        bracketRight.addActionListener(e ->{
+            String current = text.getText();
+            if (current.equals("0")) {
+                text.setText("(" + current);
+            } else {
+                text.setText(text.getText() + "(");
+            }
+
+        });
+
+        bracketLeft.addActionListener(e ->{
+            String current = text.getText();
+            if (current.equals("0")) {
+                text.setText(current + ")");
+            } else {
+                text.setText(text.getText() + ")");
+            }
+
+        });
+
+        clear.addActionListener(e ->{
+            text.setText("0");
+        });
+
+        sin.addActionListener(e ->{
+
+        });
+        cos.addActionListener(e ->{
+
+        });
+
+        log.addActionListener(e ->{
+
+        });
+
+        degree.addActionListener(e ->{
+
+        });
+
+        e.addActionListener(e ->{
+
+        });
+
+        pi.addActionListener(e ->{
+
+        });
+
         for (JButton button : operatorButtons) {
             button.setBackground(Color.LIGHT_GRAY);
         };
+
+
+
+        panel.add(percent);
+        panel.add(bracketRight);
+        panel.add(bracketLeft);
+        panel.add(clear);
 
 
         panel.add(bReciprocal);
@@ -164,15 +229,15 @@ public class Calculator extends JFrame {
 
 
         text = new JTextField("0");
-        Font font = new Font("Arial", Font.BOLD, 18);
+        Font font = new Font("Arial", Font.BOLD, 36);
+
+
         text.setForeground(Color.WHITE);
         text.setFont(font);
-        text.setPreferredSize(new Dimension(300, 70));
+        text.setPreferredSize(new Dimension(390, 90));
         text.setBackground(Color.DARK_GRAY);
         this.add(text, BorderLayout.NORTH);
         this.add(panel, BorderLayout.CENTER);
-
-
     }
 
 }

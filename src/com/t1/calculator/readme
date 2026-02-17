@@ -42,3 +42,28 @@ Matcher.matcher()       // поиск по шаблону
 
 не надо экранировать
 , : ; - _ = ! @ # % & ~ ` " ' < > и буквы/цифры
+
+
+//            try {
+//                double a = Double.parseDouble(parts[0]);
+//                double b = Double.parseDouble(parts[1]);
+//                return a + b;
+//            } catch (Exception e) {
+//                return 42.0;
+//            }
+
+sin
+cos
+log
+x^y
+e
+π
+
+JPopupMenu popup = new JPopupMenu();
+        text.add(popup);
+        text.setComponentPopupMenu(popup);
+        JMenu menu;
+        JMenuItem a1,a2;
+
+        a1 = new JMenuItem("Обычный");
+        a2 = new JMenuItem("Инженерный");
