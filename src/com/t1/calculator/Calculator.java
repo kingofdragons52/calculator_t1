@@ -11,11 +11,9 @@ public class Calculator extends JFrame {
 
 
     private JButton[] digitbuttons;
-    // private JButton[] operators;
-    //private String first = "", operator = "", second = "";
     private JTextField text;
     private JButton bPlus, bMinus, bMultiply, bDivide,
-            bReciprocal, bSquare, bSqrt, bComma,
+            bReciprocal, bSquare, bSqrt, bpoint,
             bEquals, bBackspace, bracketRight,
             bracketLeft, clear, percent,
             sin, cos, log, degree, e, pi;
@@ -59,7 +57,7 @@ public class Calculator extends JFrame {
         bReciprocal = new JButton("1/x");
         bSquare = new JButton("x²");
         bSqrt = new JButton("√");
-        bComma = new JButton(",");
+        bpoint = new JButton(".");
         bEquals = new JButton("=");
         bBackspace = new JButton("⌫");
         bracketRight = new JButton("(");
@@ -74,7 +72,7 @@ public class Calculator extends JFrame {
         pi = new JButton("π");
 
 
-        JButton[] operatorButtons = {bPlus, bMinus, bMultiply, bDivide,  bReciprocal, bSquare, bSqrt, bComma, bEquals, bBackspace, bracketLeft, bracketRight, percent, clear, sin, cos, log, degree, e, pi };
+        JButton[] operatorButtons = {bPlus, bMinus, bMultiply, bDivide,  bReciprocal, bSquare, bSqrt, bpoint, bEquals, bBackspace, bracketLeft, bracketRight, percent, clear, sin, cos, log, degree, e, pi };
 
 
         bPlus.addActionListener(e -> {
@@ -124,12 +122,12 @@ public class Calculator extends JFrame {
                 text.setText("1/(" + text.getText() + ")"));
 
 
-        bComma.addActionListener(e -> {
+        bpoint.addActionListener(e -> {
             String current = text.getText();
             if (current.equals("0")) {
-                text.setText(current + ",");
+                text.setText(current + ".");
             } else {
-                text.setText(text.getText() + ",");
+                text.setText(text.getText() + ".");
             }
         });
 
@@ -229,7 +227,7 @@ public class Calculator extends JFrame {
         panel.add(digitbuttons[9]);
         panel.add(bMultiply);
 
-        panel.add(bComma);
+        panel.add(bpoint);
         panel.add(digitbuttons[0]);
         panel.add(bEquals);
         panel.add(bDivide);
