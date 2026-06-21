@@ -1,4 +1,4 @@
-package main.java.com.t1.calculator;
+package com.t1.calculator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -137,7 +137,7 @@ public class Calculator extends JFrame {
     private void executeCalculation() {
         try {
             String expression = text.getText().replace("×", "*");
-            double result = ExpressionParser.evaluate(expression);
+            double result = RecursiveParser.evaluate(expression);
 
             if (result == (long) result) {
                 text.setText(String.valueOf((long) result));
