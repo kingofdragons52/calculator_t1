@@ -129,6 +129,32 @@ public class Calculator extends JFrame {
         panel.add(equalsBtn);
         panel.add(opButtons.get("/"));
 
+        // Навешиваем слушатель клавиатуры на само окно
+        this.setFocusable(true);
+        this.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent e) {
+                char ch = e.getKeyChar();
+                String current = text.getText();
+
+                if (Character.isDigit(ch)) {
+                    if (current.equals("0")) text.setText(String.valueOf(ch));
+                    else text.setText(current + ch);
+                } else if (ch == '+' || ch == '-' || ch == '/' || ch == '(' || ch == ')' || ch == '.') {
+                    text.setText(current.equals("0") && ch == '(' ? "(" : current + ch);
+                } else if (ch == '*') {
+                    text.setText(current + "×"); // Для визуала подменяем на красивый крестик
+                } else if (ch == '\n' || ch == '=') {
+                    executeCalculation();
+                } else if (ch == '\b') { // Backspace
+                    if (current.length() > 0 && !current.equals("0")) {
+                        String next = current.substring(0, current.length() - 1);
+                        text.setText(next.isEmpty() ? "0" : next);
+                    }
+                }
+            }
+        });
+
         this.add(panel, BorderLayout.CENTER);
     }
 
@@ -136,9 +162,16 @@ public class Calculator extends JFrame {
         try {
             String expression = text.getText().replace("×", "*");
             double result = RecursiveParser.evaluate(expression);
-            text.setText(String.valueOf(result));
+
+            if (result == (long) result) {
+                text.setText(String.valueOf((long) result));
+            } else {
+                text.setText(String.valueOf(result));
+            }
+        } catch (RuntimeException ex) {
+            text.setText(ex.getMessage());
         } catch (Exception ex) {
-            text.setText("Ошибка");
+            text.setText("Ошибка ввода");
         }
     }
 }
