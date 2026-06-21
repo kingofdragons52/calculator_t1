@@ -1,5 +1,4 @@
-package main.java.com.t1.calculator;
-
+package com.t1.calculator;
 import java.util.*;
 
 public class ExpressionParser {
@@ -27,7 +26,14 @@ public class ExpressionParser {
                 continue;
             }
 
-            if (c == '√') {
+            // Обработка многосимвольных функций вроде "1/x" или "x²"
+            if (i + 3 <= expr.length() && expr.substring(i, i + 3).equals("1/x")) {
+                tokens.add("1/x");
+                i += 3;
+            } else if (i + 2 <= expr.length() && expr.substring(i, i + 2).equals("x²")) {
+                tokens.add("x²");
+                i += 2;
+            } else if (c == '√' || c == '%') {
                 tokens.add(String.valueOf(c));
                 i++;
             } else if (Character.isDigit(c) || c == '.') {
@@ -67,8 +73,9 @@ public class ExpressionParser {
                     output.add(stack.pop());
                 }
                 if (!stack.isEmpty()) {
-                    stack.pop();
+                    stack.pop(); // Удаляем саму "("
                 }
+                // Если перед скобкой была функция или унарный минус, выталкиваем её в выходную очередь
                 if (!stack.isEmpty() && (isFunction(stack.peek()) || stack.peek().equals("u-"))) {
                     output.add(stack.pop());
                 }
@@ -120,15 +127,32 @@ public class ExpressionParser {
                     throw new RuntimeException("Некорректное выражение для функции");
                 }
                 double target = stack.pop();
-                if (token.equals("√")) {
-                    if (target < 0) {
-                        throw new ArithmeticException("Корень из отрицательного числа");
-                    }
-                    stack.push(Math.sqrt(target));
+                switch (token) {
+                    case "√":
+                        if (target < 0) {
+                            throw new ArithmeticException("Корень из отрицательного числа");
+                        }
+                        stack.push(Math.sqrt(target));
+                        break;
+                    case "x²":
+                        stack.push(target * target);
+                        break;
+                    case "1/x":
+                        if (target == 0) {
+                            throw new ArithmeticException("Деление на ноль при вычислении 1/x");
+                        }
+                        stack.push(1.0 / target);
+                        break;
+                    case "%":
+                        stack.push(target / 100.0);
+                        break;
                 }
             }
         }
-        return stack.isEmpty() ? 0.0 : stack.pop();
+        if (stack.size() != 1) {
+            throw new RuntimeException("Некорректное выражение");
+        }
+        return stack.pop();
     }
 
     private static boolean isNumber(String token) {
@@ -145,7 +169,7 @@ public class ExpressionParser {
     }
 
     private static boolean isFunction(String token) {
-        return token.equals("√");
+        return token.equals("√") || token.equals("x²") || token.equals("1/x") || token.equals("%");
     }
 
     private static int getPrecedence(String operator) {

@@ -1,6 +1,6 @@
-package test.java.com.t1.calculator;
+package com.t1.calculator;
 
-import main.java.com.t1.calculator.ExpressionParser;
+import com.t1.calculator.ExpressionParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -117,5 +117,43 @@ public class ExpressionParserTest {
         String expression = "-√(2+2)";
         double result = ExpressionParser.evaluate(expression);
         assertEquals(-2.0, result, 0.001);
+    }
+
+    @Test
+    public void testSquareExpression() {
+        String expression = "x²(5)";
+        double result = ExpressionParser.evaluate(expression);
+        assertEquals(25.0, result, 0.001);
+    }
+
+    @Test
+    public void testInverseExpression() {
+        String expression = "1/x(4)";
+        double result = ExpressionParser.evaluate(expression);
+        assertEquals(0.25, result, 0.001);
+    }
+
+    @Test
+    public void testPercentExpression() {
+        String expression = "%(50)";
+        double result = ExpressionParser.evaluate(expression);
+        assertEquals(0.5, result, 0.001);
+    }
+
+    @Test
+    public void testComplexAdvancedOps() {
+        // Квадрат от выражения и комбинация функций: 1/x(0.5) + x²(3) -> 2.0 + 9.0 = 11.0
+        String expression = "1/x(0.5)+x²(3)";
+        double result = ExpressionParser.evaluate(expression);
+        assertEquals(11.0, result, 0.001);
+    }
+
+    @Test
+    public void testInverseZeroException() {
+        String expression = "1/x(0)";
+        Exception exception = assertThrows(ArithmeticException.class, () -> {
+            ExpressionParser.evaluate(expression);
+        });
+        assertEquals("Деление на ноль при вычислении 1/x", exception.getMessage());
     }
 }

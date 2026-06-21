@@ -1,216 +1,150 @@
-package main.java.com.t1.calculator;
-
+package com.t1.calculator;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Calculator extends JFrame {
 
-    private JButton[] digitbuttons;
     private JTextField text;
-    private JButton bPlus, bMinus, bMultiply, bDivide,
-            bReciprocal, bSquare, bSqrt, bpoint,
-            bEquals, bBackspace, bracketRight,
-            bracketLeft, clear, percent,
-            sin, cos, log, degree, e, pi;
+    private JButton[] digitButtons;
+    private Map<String, JButton> opButtons = new HashMap<>();
 
-    public Calculator(){
+    public Calculator() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(300, 400);
+        setSize(400, 500);
         setLocationRelativeTo(null);
+        setTitle("Calculator (Shunting Yard)");
 
-        String courses[] = { "Обычный","Инженерный"};
-        JComboBox c = new JComboBox(courses);
+        text = new JTextField("0");
+        text.setFont(new Font("Arial", Font.BOLD, 36));
+        text.setForeground(Color.WHITE);
+        text.setBackground(Color.DARK_GRAY);
+        text.setHorizontalAlignment(JTextField.RIGHT);
+        text.setPreferredSize(new Dimension(400, 80));
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(6, 4, 1, 1));
-        panel.setBackground(Color.black);
+        text.addActionListener(e -> executeCalculation());
+        this.add(text, BorderLayout.NORTH);
 
-        digitbuttons = new JButton[10];
+        JPanel panel = new JPanel(new GridLayout(6, 4, 2, 2));
+        panel.setBackground(Color.BLACK);
+
+        digitButtons = new JButton[10];
         for (int i = 0; i <= 9; i++) {
-            digitbuttons[i] = new JButton(String.valueOf(i));
-            int digit = i;
-
-            digitbuttons[i].addActionListener(e -> {
+            final int digit = i;
+            digitButtons[i] = new JButton(String.valueOf(i));
+            digitButtons[i].setBackground(Color.LIGHT_GRAY);
+            digitButtons[i].setFont(new Font("Arial", Font.PLAIN, 18));
+            digitButtons[i].addActionListener(e -> {
                 String current = text.getText();
                 if (current.equals("0")) {
                     text.setText(String.valueOf(digit));
                 } else {
                     text.setText(current + digit);
                 }
-                text.requestFocusInWindow();
             });
-            digitbuttons[i].setBackground(Color.LIGHT_GRAY);
         }
 
-        bPlus = new JButton("+");
-        bMinus = new JButton("-");
-        bMultiply = new JButton("×");
-        bDivide = new JButton("/");
-        bReciprocal = new JButton("1/x");
-        bSquare = new JButton("x²");
-        bSqrt = new JButton("√");
-        bpoint = new JButton(".");
-        bEquals = new JButton("=");
-        bBackspace = new JButton("⌫");
-        bracketRight = new JButton("(");
-        bracketLeft = new JButton(")");
-        percent = new JButton("%");
-        clear = new JButton("C");
-        sin = new JButton("sin");
-        cos = new JButton("cos");
-        log = new JButton("log");
-        degree = new JButton("x^y");
-        e = new JButton("e");
-        pi = new JButton("π");
-
-        JButton[] operatorButtons = {bPlus, bMinus, bMultiply, bDivide, bReciprocal, bSquare, bSqrt, bpoint, bEquals, bBackspace, bracketLeft, bracketRight, percent, clear, sin, cos, log, degree, e, pi };
-
-        bPlus.addActionListener(e -> {
-            String current = text.getText();
-            text.setText(current + "+");
-            text.requestFocusInWindow();
-        });
-
-        bMinus.addActionListener(e -> {
-            String current = text.getText();
-            text.setText(current + "-");
-            text.requestFocusInWindow();
-        });
-
-        bMultiply.addActionListener(e -> {
-            String current = text.getText();
-            text.setText(current + "×");
-            text.requestFocusInWindow();
-        });
-
-        bDivide.addActionListener(e -> {
-            String current = text.getText();
-            text.setText(current + "/");
-            text.requestFocusInWindow();
-        });
-
-        bSquare.addActionListener(e -> {
-            String current = text.getText();
-            text.setText(current + "²");
-            text.requestFocusInWindow();
-        });
-
-        bSqrt.addActionListener(e -> {
-            String current = text.getText();
-            if (current.equals("0")) {
-                text.setText("√(");
-            } else {
-                text.setText(current + "√(");
-            }
-            text.requestFocusInWindow();
-        });
-
-        bReciprocal.addActionListener(e -> {
-            String current = text.getText();
-            if (current.equals("0")) {
-                text.setText("1/(");
-            } else {
-                text.setText(current + "1/(");
-            }
-            text.requestFocusInWindow();
-        });
-
-        bpoint.addActionListener(e -> {
-            String current = text.getText();
-            text.setText(current + ".");
-            text.requestFocusInWindow();
-        });
-
-        bracketRight.addActionListener(e -> {
-            String current = text.getText();
-            if (current.equals("0")) {
-                text.setText("(");
-            } else {
-                text.setText(current + "(");
-            }
-            text.requestFocusInWindow();
-        });
-
-        bracketLeft.addActionListener(e -> {
-            String current = text.getText();
-            if (current.equals("0")) {
-                text.setText(")");
-            } else {
-                text.setText(current + ")");
-            }
-            text.requestFocusInWindow();
-        });
-
-        clear.addActionListener(e -> {
-            text.setText("0");
-            text.requestFocusInWindow();
-        });
-
-        for (JButton button : operatorButtons) {
-            button.setBackground(Color.LIGHT_GRAY);
+        String[] simpleOps = {"+", "-", "×", "/", "(", ")", "."};
+        for (String op : simpleOps) {
+            JButton btn = new JButton(op);
+            btn.setBackground(Color.LIGHT_GRAY);
+            btn.setFont(new Font("Arial", Font.PLAIN, 18));
+            btn.addActionListener(e -> {
+                String current = text.getText();
+                if (current.equals("0")) {
+                    text.setText(op.equals("(") ? op : current + op);
+                } else {
+                    text.setText(current + op);
+                }
+            });
+            opButtons.put(op, btn);
         }
 
-        panel.add(percent);
-        panel.add(bracketRight);
-        panel.add(bracketLeft);
-        panel.add(clear);
+        String[] advancedOps = {"√", "x²", "1/x", "%"};
+        for (String op : advancedOps) {
+            JButton btn = new JButton(op);
+            btn.setBackground(Color.LIGHT_GRAY);
+            btn.setFont(new Font("Arial", Font.PLAIN, 18));
+            btn.addActionListener(e -> {
+                String current = text.getText();
+                if (current.equals("0")) {
+                    text.setText(op + "(");
+                } else {
+                    text.setText(current + op + "(");
+                }
+            });
+            opButtons.put(op, btn);
+        }
 
-        panel.add(bReciprocal);
-        panel.add(bSquare);
-        panel.add(bSqrt);
-        panel.add(bBackspace);
+        JButton clearBtn = new JButton("C");
+        clearBtn.setBackground(Color.LIGHT_GRAY);
+        clearBtn.setFont(new Font("Arial", Font.BOLD, 18));
+        clearBtn.setForeground(Color.BLACK);
+        clearBtn.addActionListener(e -> text.setText("0"));
 
-        panel.add(digitbuttons[1]);
-        panel.add(digitbuttons[2]);
-        panel.add(digitbuttons[3]);
-        panel.add(bPlus);
+        JButton backspaceBtn = new JButton("⌫");
+        backspaceBtn.setBackground(Color.LIGHT_GRAY);
+        backspaceBtn.setFont(new Font(Font.DIALOG, Font.PLAIN, 18));
+        backspaceBtn.addActionListener(e -> {
+            String current = text.getText();
+            if (current.length() > 0 && !current.equals("0")) {
+                String next = current.substring(0, current.length() - 1);
+                text.setText(next.isEmpty() ? "0" : next);
+            }
+        });
 
-        panel.add(digitbuttons[4]);
-        panel.add(digitbuttons[5]);
-        panel.add(digitbuttons[6]);
-        panel.add(bMinus);
+        JButton equalsBtn = new JButton("=");
+        equalsBtn.setBackground(Color.LIGHT_GRAY);
+        equalsBtn.setFont(new Font("Arial", Font.BOLD, 18));
+        equalsBtn.addActionListener(e -> executeCalculation());
 
-        panel.add(digitbuttons[7]);
-        panel.add(digitbuttons[8]);
-        panel.add(digitbuttons[9]);
-        panel.add(bMultiply);
+        panel.add(opButtons.get("%"));   panel.add(opButtons.get("("));   panel.add(opButtons.get(")"));   panel.add(clearBtn);
+        panel.add(opButtons.get("1/x")); panel.add(opButtons.get("x²")); panel.add(opButtons.get("√"));   panel.add(backspaceBtn);
+        panel.add(digitButtons[1]);      panel.add(digitButtons[2]);      panel.add(digitButtons[3]);      panel.add(opButtons.get("+"));
+        panel.add(digitButtons[4]);      panel.add(digitButtons[5]);      panel.add(digitButtons[6]);      panel.add(opButtons.get("-"));
+        panel.add(digitButtons[7]);      panel.add(digitButtons[8]);      panel.add(digitButtons[9]);      panel.add(opButtons.get("×"));
+        panel.add(opButtons.get("."));   panel.add(digitButtons[0]);      panel.add(equalsBtn);            panel.add(opButtons.get("/"));
 
-        panel.add(bpoint);
-        panel.add(digitbuttons[0]);
-        panel.add(bEquals);
-        panel.add(bDivide);
+        this.add(panel, BorderLayout.CENTER);
 
-        text = new JTextField("0");
-        text.setHorizontalAlignment(JTextField.RIGHT);
-
-        Font font = new Font("Arial", Font.BOLD, 36);
-        text.setForeground(Color.WHITE);
-        text.setFont(font);
-        text.setPreferredSize(new Dimension(390, 90));
-        text.setBackground(Color.DARK_GRAY);
-
-        text.addKeyListener(new KeyAdapter() {
+        this.setFocusable(true);
+        this.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    performCalculation();
+            public void keyTyped(java.awt.event.KeyEvent e) {
+                char ch = e.getKeyChar();
+                String current = text.getText();
+                if (Character.isDigit(ch)) {
+                    if (current.equals("0")) text.setText(String.valueOf(ch));
+                    else text.setText(current + ch);
+                } else if (ch == '+' || ch == '-' || ch == '/' || ch == '(' || ch == ')' || ch == '.') {
+                    text.setText(current.equals("0") && ch == '(' ? "(" : current + ch);
+                } else if (ch == '*') {
+                    text.setText(current + "×");
+                } else if (ch == '\n' || ch == '=') {
+                    executeCalculation();
+                } else if (ch == '\b') {
+                    if (current.length() > 0 && !current.equals("0")) {
+                        String next = current.substring(0, current.length() - 1);
+                        text.setText(next.isEmpty() ? "0" : next);
+                    }
                 }
             }
         });
-
-        this.add(text, BorderLayout.NORTH);
-        this.add(panel, BorderLayout.CENTER);
-
-        SwingUtilities.invokeLater(() -> text.requestFocusInWindow());
     }
 
-    private void performCalculation() {
-        String expression = text.getText();
+    private void executeCalculation() {
         try {
+            String expression = text.getText().replace("×", "*");
             double result = ExpressionParser.evaluate(expression);
-            text.setText(String.valueOf(result));
+
+            if (result == (long) result) {
+                text.setText(String.valueOf((long) result));
+            } else {
+                text.setText(String.valueOf(result));
+            }
+        } catch (RuntimeException ex) {
+            text.setText(ex.getMessage());
         } catch (Exception ex) {
             text.setText("Ошибка");
         }
