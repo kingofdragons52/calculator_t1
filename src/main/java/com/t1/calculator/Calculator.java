@@ -46,22 +46,33 @@ public class Calculator extends JFrame {
             });
         }
 
-        String[] simpleOps = {"+", "-", "×", "/", "(", ")", ".", "%", "1/x", "x²", "√"};
+        String[] simpleOps = {"+", "-", "×", "/", "(", ")", "."};
         for (String op : simpleOps) {
             JButton btn = new JButton(op);
             btn.setBackground(Color.LIGHT_GRAY);
             btn.setFont(new Font("Arial", Font.PLAIN, 18));
-
             btn.addActionListener(e -> {
                 String current = text.getText();
                 if (current.equals("0")) {
-                    if (op.equals("√") || op.equals("(")) {
-                        text.setText(op);
-                    } else {
-                        text.setText(current + op);
-                    }
+                    text.setText(op.equals("(") ? op : current + op);
                 } else {
                     text.setText(current + op);
+                }
+            });
+            opButtons.put(op, btn);
+        }
+
+        String[] advancedOps = {"√", "x²", "1/x", "%"};
+        for (String op : advancedOps) {
+            JButton btn = new JButton(op);
+            btn.setBackground(Color.LIGHT_GRAY);
+            btn.setFont(new Font("Arial", Font.PLAIN, 18));
+            btn.addActionListener(e -> {
+                String current = text.getText();
+                if (current.equals("0")) {
+                    text.setText(op + "(");
+                } else {
+                    text.setText(current + op + "(");
                 }
             });
             opButtons.put(op, btn);

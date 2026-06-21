@@ -71,4 +71,53 @@ public class ExpressionParserTest {
             RecursiveParser.evaluate(expression);
         });
     }
+
+    @Test
+    public void testSqrt() {
+        String expression = "√(2+2)";
+        double result = RecursiveParser.evaluate(expression);
+        assertEquals(2.0, result, 0.001);
+    }
+
+    @Test
+    public void testUnaryMinus() {
+        String expression = "-5+3";
+        double result = RecursiveParser.evaluate(expression);
+        assertEquals(-2.0, result, 0.001);
+    }
+
+    @Test
+    public void testUnaryMinusWithSqrt() {
+        String expression = "-*(2+2)".replace("*", "√");
+        double result = RecursiveParser.evaluate("-√(2+2)");
+        assertEquals(-2.0, result, 0.001);
+    }
+
+    @Test
+    public void testSquare() {
+        String expression = "x²(5)";
+        double result = RecursiveParser.evaluate(expression);
+        assertEquals(25.0, result, 0.001);
+    }
+
+    @Test
+    public void testInverse() {
+        String expression = "1/x(4)";
+        double result = RecursiveParser.evaluate(expression);
+        assertEquals(0.25, result, 0.001);
+    }
+
+    @Test
+    public void testPercent() {
+        String expression = "%(50)";
+        double result = RecursiveParser.evaluate(expression);
+        assertEquals(0.5, result, 0.001);
+    }
+
+    @Test
+    public void testComplexAdvanced() {
+        String expression = "x²(2)+1/x(2)"; // 4 + 0.5
+        double result = RecursiveParser.evaluate(expression);
+        assertEquals(4.5, result, 0.001);
+    }
 }
