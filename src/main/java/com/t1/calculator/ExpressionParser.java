@@ -11,15 +11,15 @@ public class ExpressionParser {
         }
 
         List<String> tokens = tokenize(expression);
-
         List<String> postfix = shuntingYard(tokens);
-
         return calculatePostfix(postfix);
     }
 
     private static List<String> tokenize(String expr) {
+        expr = expr.replace("×", "*");
         List<String> tokens = new ArrayList<>();
         int i = 0;
+
         while (i < expr.length()) {
             char c = expr.charAt(i);
             if (Character.isWhitespace(c)) {
@@ -27,7 +27,10 @@ public class ExpressionParser {
                 continue;
             }
 
-            if (Character.isDigit(c) || c == '.') {
+            if (c == '√') {
+                tokens.add(String.valueOf(c));
+                i++;
+            } else if (Character.isDigit(c) || c == '.') {
                 StringBuilder sb = new StringBuilder();
                 while (i < expr.length() && (Character.isDigit(expr.charAt(i)) || expr.charAt(i) == '.')) {
                     sb.append(expr.charAt(i++));
@@ -48,6 +51,8 @@ public class ExpressionParser {
         for (String token : tokens) {
             if (isNumber(token)) {
                 output.add(token);
+            } else if (isFunction(token)) {
+                stack.push(token);
             } else if (token.equals("(")) {
                 stack.push(token);
             } else if (token.equals(")")) {
@@ -56,6 +61,9 @@ public class ExpressionParser {
                 }
                 if (!stack.isEmpty()) {
                     stack.pop();
+                }
+                if (!stack.isEmpty() && isFunction(stack.peek())) {
+                    output.add(stack.pop());
                 }
             } else if (isOperator(token)) {
                 while (!stack.isEmpty() && isOperator(stack.peek()) && getPrecedence(stack.peek()) >= getPrecedence(token)) {
@@ -86,14 +94,24 @@ public class ExpressionParser {
                 switch (token) {
                     case "+": stack.push(a + b); break;
                     case "-": stack.push(a - b); break;
-                    case "*":
-                    case "×": stack.push(a * b); break;
+                    case "*": stack.push(a * b); break;
                     case "/":
                         if (b == 0) {
                             throw new ArithmeticException("Деление на ноль");
                         }
                         stack.push(a / b);
                         break;
+                }
+            } else if (isFunction(token)) {
+                if (stack.isEmpty()) {
+                    throw new RuntimeException("Некорректное выражение для функции");
+                }
+                double target = stack.pop();
+                if (token.equals("√")) {
+                    if (target < 0) {
+                        throw new ArithmeticException("Корень из отрицательного числа");
+                    }
+                    stack.push(Math.sqrt(target));
                 }
             }
         }
@@ -110,12 +128,16 @@ public class ExpressionParser {
     }
 
     private static boolean isOperator(String token) {
-        return token.equals("+") || token.equals("-") || token.equals("*") || token.equals("×") || token.equals("/");
+        return token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/");
+    }
+
+    private static boolean isFunction(String token) {
+        return token.equals("√");
     }
 
     private static int getPrecedence(String operator) {
         if (operator.equals("+") || operator.equals("-")) return 1;
-        if (operator.equals("*") || operator.equals("×") || operator.equals("/")) return 2;
+        if (operator.equals("*") || operator.equals("/")) return 2;
         return -1;
     }
 }

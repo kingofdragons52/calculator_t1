@@ -1,10 +1,11 @@
-package main.java.calculator;
+package main.java.com.t1.calculator;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Calculator extends JFrame {
-
 
     private JButton[] digitbuttons;
     private JTextField text;
@@ -14,8 +15,6 @@ public class Calculator extends JFrame {
             bracketLeft, clear, percent,
             sin, cos, log, degree, e, pi;
 
-
-
     public Calculator(){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 400);
@@ -23,7 +22,6 @@ public class Calculator extends JFrame {
 
         String courses[] = { "Обычный","Инженерный"};
         JComboBox c = new JComboBox(courses);
-        // panel.add(c);
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(6, 4, 1, 1));
@@ -41,9 +39,9 @@ public class Calculator extends JFrame {
                 } else {
                     text.setText(current + digit);
                 }
+                text.requestFocusInWindow();
             });
             digitbuttons[i].setBackground(Color.LIGHT_GRAY);
-
         }
 
         bPlus = new JButton("+");
@@ -67,141 +65,97 @@ public class Calculator extends JFrame {
         e = new JButton("e");
         pi = new JButton("π");
 
-
-        JButton[] operatorButtons = {bPlus, bMinus, bMultiply, bDivide,  bReciprocal, bSquare, bSqrt, bpoint, bEquals, bBackspace, bracketLeft, bracketRight, percent, clear, sin, cos, log, degree, e, pi };
-
+        JButton[] operatorButtons = {bPlus, bMinus, bMultiply, bDivide, bReciprocal, bSquare, bSqrt, bpoint, bEquals, bBackspace, bracketLeft, bracketRight, percent, clear, sin, cos, log, degree, e, pi };
 
         bPlus.addActionListener(e -> {
             String current = text.getText();
-            if (current.equals("0")) {
-                text.setText(current + "+");
-            } else {
-                text.setText(text.getText() + "+");
-            }
+            text.setText(current + "+");
+            text.requestFocusInWindow();
         });
-
 
         bMinus.addActionListener(e -> {
             String current = text.getText();
-            if (current.equals("0")) {
-                text.setText(current + "-");
-            } else {
-                text.setText(text.getText() + "-");
-            }
+            text.setText(current + "-");
+            text.requestFocusInWindow();
         });
 
         bMultiply.addActionListener(e -> {
             String current = text.getText();
-            if (current.equals("0")) {
-                text.setText(current + "×");
-            } else {
-                text.setText(text.getText() + "×");
-            }
+            text.setText(current + "×");
+            text.requestFocusInWindow();
         });
 
         bDivide.addActionListener(e -> {
             String current = text.getText();
-            if (current.equals("0")) {
-                text.setText(current + "/");
-            } else {
-                text.setText(text.getText() + "/");
-            }
+            text.setText(current + "/");
+            text.requestFocusInWindow();
         });
 
-        bSquare.addActionListener(e ->
-                text.setText(text.getText() + "²"));
+        bSquare.addActionListener(e -> {
+            String current = text.getText();
+            text.setText(current + "²");
+            text.requestFocusInWindow();
+        });
 
-        bSqrt.addActionListener(e ->
-                text.setText("√(" + text.getText() + ")"));
+        bSqrt.addActionListener(e -> {
+            String current = text.getText();
+            if (current.equals("0")) {
+                text.setText("√(");
+            } else {
+                text.setText(current + "√(");
+            }
+            text.requestFocusInWindow();
+        });
 
-        bReciprocal.addActionListener(e ->
-                text.setText("1/(" + text.getText() + ")"));
-
+        bReciprocal.addActionListener(e -> {
+            String current = text.getText();
+            if (current.equals("0")) {
+                text.setText("1/(");
+            } else {
+                text.setText(current + "1/(");
+            }
+            text.requestFocusInWindow();
+        });
 
         bpoint.addActionListener(e -> {
             String current = text.getText();
-            if (current.equals("0")) {
-                text.setText(current + ".");
-            } else {
-                text.setText(text.getText() + ".");
-            }
+            text.setText(current + ".");
+            text.requestFocusInWindow();
         });
 
-        bEquals.addActionListener(e -> {                           // =
-                String expression = text.getText();
-                double result = ExpressionParser.evaluate(expression);
-                text.setText(String.valueOf(result));
-        });
-
-        bBackspace.addActionListener(e -> {                       // BckSpc
-            String deleted = text.getText();
-            if (deleted.equals("0")) {
-                text.setText(deleted.substring(0, deleted.length() - 1));
-            }
-            if (deleted.length() > 0) {
-                text.setText(deleted.substring(0, deleted.length() - 1));
-            }
-
-        });
-
-        bracketRight.addActionListener(e ->{
+        bracketRight.addActionListener(e -> {
             String current = text.getText();
             if (current.equals("0")) {
-                text.setText("(" + current);
+                text.setText("(");
             } else {
-                text.setText(text.getText() + "(");
+                text.setText(current + "(");
             }
-
+            text.requestFocusInWindow();
         });
 
-        bracketLeft.addActionListener(e ->{
+        bracketLeft.addActionListener(e -> {
             String current = text.getText();
             if (current.equals("0")) {
+                text.setText(")");
+            } else {
                 text.setText(current + ")");
-            } else {
-                text.setText(text.getText() + ")");
             }
-
+            text.requestFocusInWindow();
         });
 
-        clear.addActionListener(e ->{
+        clear.addActionListener(e -> {
             text.setText("0");
-        });
-
-        sin.addActionListener(e ->{
-
-        });
-        cos.addActionListener(e ->{
-
-        });
-
-        log.addActionListener(e ->{
-
-        });
-
-        degree.addActionListener(e ->{
-
-        });
-
-        e.addActionListener(e ->{
-
-        });
-
-        pi.addActionListener(e ->{
-
+            text.requestFocusInWindow();
         });
 
         for (JButton button : operatorButtons) {
             button.setBackground(Color.LIGHT_GRAY);
-        };
-
-
+        }
 
         panel.add(percent);
         panel.add(bracketRight);
         panel.add(bracketLeft);
         panel.add(clear);
-
 
         panel.add(bReciprocal);
         panel.add(bSquare);
@@ -228,18 +182,37 @@ public class Calculator extends JFrame {
         panel.add(bEquals);
         panel.add(bDivide);
 
-
-
         text = new JTextField("0");
+        text.setHorizontalAlignment(JTextField.RIGHT);
+
         Font font = new Font("Arial", Font.BOLD, 36);
-
-
         text.setForeground(Color.WHITE);
         text.setFont(font);
         text.setPreferredSize(new Dimension(390, 90));
         text.setBackground(Color.DARK_GRAY);
+
+        text.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    performCalculation();
+                }
+            }
+        });
+
         this.add(text, BorderLayout.NORTH);
         this.add(panel, BorderLayout.CENTER);
+
+        SwingUtilities.invokeLater(() -> text.requestFocusInWindow());
     }
 
+    private void performCalculation() {
+        String expression = text.getText();
+        try {
+            double result = ExpressionParser.evaluate(expression);
+            text.setText(String.valueOf(result));
+        } catch (Exception ex) {
+            text.setText("Ошибка");
+        }
+    }
 }
