@@ -1,4 +1,4 @@
-package main.java.com.t1.calculator;
+package com.t1.calculator;
 
 public class Main {
     public static void main(String[] args) {
