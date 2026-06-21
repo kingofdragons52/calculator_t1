@@ -1,6 +1,6 @@
-package test.java.com.t1.calculator;
+package com.t1.calculator;
 
-import main.java.com.t1.calculator.ExpressionParser;
+import com.t1.calculator.ExpressionParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
