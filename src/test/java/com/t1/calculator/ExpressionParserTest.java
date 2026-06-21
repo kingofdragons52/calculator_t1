@@ -97,4 +97,25 @@ public class ExpressionParserTest {
         double result = ExpressionParser.evaluate(expression);
         assertEquals(2.0, result, 0.001);
     }
+
+    @Test
+    public void testUnaryMinusAtStart() {
+        String expression = "-5+10";
+        double result = ExpressionParser.evaluate(expression);
+        assertEquals(5.0, result, 0.001);
+    }
+
+    @Test
+    public void testUnaryMinusInBrackets() {
+        String expression = "5×(-2)";
+        double result = ExpressionParser.evaluate(expression);
+        assertEquals(-10.0, result, 0.001);
+    }
+
+    @Test
+    public void testUnaryMinusWithSqrt() {
+        String expression = "-√(2+2)";
+        double result = ExpressionParser.evaluate(expression);
+        assertEquals(-2.0, result, 0.001);
+    }
 }

@@ -36,6 +36,13 @@ public class ExpressionParser {
                     sb.append(expr.charAt(i++));
                 }
                 tokens.add(sb.toString());
+            } else if (c == '-') {
+                if (tokens.isEmpty() || isOperator(tokens.get(tokens.size() - 1)) || tokens.get(tokens.size() - 1).equals("(")) {
+                    tokens.add("u-");
+                } else {
+                    tokens.add("-");
+                }
+                i++;
             } else {
                 tokens.add(String.valueOf(c));
                 i++;
@@ -51,7 +58,7 @@ public class ExpressionParser {
         for (String token : tokens) {
             if (isNumber(token)) {
                 output.add(token);
-            } else if (isFunction(token)) {
+            } else if (isFunction(token) || token.equals("u-")) {
                 stack.push(token);
             } else if (token.equals("(")) {
                 stack.push(token);
@@ -62,11 +69,12 @@ public class ExpressionParser {
                 if (!stack.isEmpty()) {
                     stack.pop();
                 }
-                if (!stack.isEmpty() && isFunction(stack.peek())) {
+                if (!stack.isEmpty() && (isFunction(stack.peek()) || stack.peek().equals("u-"))) {
                     output.add(stack.pop());
                 }
             } else if (isOperator(token)) {
-                while (!stack.isEmpty() && isOperator(stack.peek()) && getPrecedence(stack.peek()) >= getPrecedence(token)) {
+                while (!stack.isEmpty() && (isOperator(stack.peek()) || stack.peek().equals("u-"))
+                        && getPrecedence(stack.peek()) >= getPrecedence(token)) {
                     output.add(stack.pop());
                 }
                 stack.push(token);
@@ -102,6 +110,11 @@ public class ExpressionParser {
                         stack.push(a / b);
                         break;
                 }
+            } else if (token.equals("u-")) {
+                if (stack.isEmpty()) {
+                    throw new RuntimeException("Ошибка унарного минуса");
+                }
+                stack.push(-stack.pop());
             } else if (isFunction(token)) {
                 if (stack.isEmpty()) {
                     throw new RuntimeException("Некорректное выражение для функции");
@@ -138,6 +151,7 @@ public class ExpressionParser {
     private static int getPrecedence(String operator) {
         if (operator.equals("+") || operator.equals("-")) return 1;
         if (operator.equals("*") || operator.equals("/")) return 2;
+        if (operator.equals("u-")) return 3;
         return -1;
     }
 }
