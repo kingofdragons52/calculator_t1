@@ -1,11 +1,7 @@
-package com.t1.calculator;
+package main.java.calculator;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.LinkedList;
-import java.util.List;
 
 public class Calculator extends JFrame {
 
