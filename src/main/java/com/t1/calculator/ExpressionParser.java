@@ -1,4 +1,5 @@
-package com.t1.calculator;
+package main.java.com.t1.calculator;
+
 import java.util.*;
 
 public class ExpressionParser {
@@ -26,7 +27,6 @@ public class ExpressionParser {
                 continue;
             }
 
-            // Обработка многосимвольных функций вроде "1/x" или "x²"
             if (i + 3 <= expr.length() && expr.substring(i, i + 3).equals("1/x")) {
                 tokens.add("1/x");
                 i += 3;
@@ -73,9 +73,8 @@ public class ExpressionParser {
                     output.add(stack.pop());
                 }
                 if (!stack.isEmpty()) {
-                    stack.pop(); // Удаляем саму "("
+                    stack.pop();
                 }
-                // Если перед скобкой была функция или унарный минус, выталкиваем её в выходную очередь
                 if (!stack.isEmpty() && (isFunction(stack.peek()) || stack.peek().equals("u-"))) {
                     output.add(stack.pop());
                 }

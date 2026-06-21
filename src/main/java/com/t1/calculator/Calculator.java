@@ -1,4 +1,5 @@
-package com.t1.calculator;
+package main.java.com.t1.calculator;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
