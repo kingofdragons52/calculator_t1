@@ -13,7 +13,7 @@ public class Calculator extends JFrame {
 
     public Calculator() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(320, 400);
+        setSize(400, 500);
         setLocationRelativeTo(null);
         setTitle("Calculator");
 
@@ -22,14 +22,12 @@ public class Calculator extends JFrame {
         text.setForeground(Color.WHITE);
         text.setBackground(Color.DARK_GRAY);
         text.setHorizontalAlignment(JTextField.RIGHT);
-        text.setPreferredSize(new Dimension(320, 80));
+        text.setPreferredSize(new Dimension(400, 80));
 
-        // МОМЕНТ 2: Слушаем нажатие Enter в текстовом поле
         text.addActionListener(e -> executeCalculation());
-
         this.add(text, BorderLayout.NORTH);
 
-        JPanel panel = new JPanel(new GridLayout(5, 4, 2, 2));
+        JPanel panel = new JPanel(new GridLayout(6, 4, 2, 2));
         panel.setBackground(Color.BLACK);
 
         digitButtons = new JButton[10];
@@ -40,29 +38,43 @@ public class Calculator extends JFrame {
             digitButtons[i].setFont(new Font("Arial", Font.PLAIN, 18));
             digitButtons[i].addActionListener(e -> {
                 String current = text.getText();
-                text.setText(current.equals("0") ? String.valueOf(digit) : current + digit);
+                if (current.equals("0")) {
+                    text.setText(String.valueOf(digit));
+                } else {
+                    text.setText(current + digit);
+                }
             });
         }
 
-        String[] simpleOps = {"+", "-", "×", "/", "(", ")", "."};
+        String[] simpleOps = {"+", "-", "×", "/", "(", ")", ".", "%", "1/x", "x²", "√"};
         for (String op : simpleOps) {
             JButton btn = new JButton(op);
             btn.setBackground(Color.LIGHT_GRAY);
             btn.setFont(new Font("Arial", Font.PLAIN, 18));
+
             btn.addActionListener(e -> {
                 String current = text.getText();
-                text.setText(current.equals("0") ? op : current + op);
+                if (current.equals("0")) {
+                    if (op.equals("√") || op.equals("(")) {
+                        text.setText(op);
+                    } else {
+                        text.setText(current + op);
+                    }
+                } else {
+                    text.setText(current + op);
+                }
             });
             opButtons.put(op, btn);
         }
 
         JButton clearBtn = new JButton("C");
-        clearBtn.setBackground(Color.RED);
-        clearBtn.setForeground(Color.WHITE);
-        clearBtn.setFont(new Font("Arial", Font.BOLD, 18));
+        clearBtn.setBackground(Color.LIGHT_GRAY);
+        clearBtn.setFont(new Font("Arial", Font.PLAIN, 18));
         clearBtn.addActionListener(e -> text.setText("0"));
 
         JButton backspaceBtn = new JButton("⌫");
+        backspaceBtn.setBackground(Color.LIGHT_GRAY);
+        backspaceBtn.setFont(new Font(Font.DIALOG, Font.PLAIN, 18));
         backspaceBtn.addActionListener(e -> {
             String current = text.getText();
             if (current.length() > 0 && !current.equals("0")) {
@@ -72,15 +84,39 @@ public class Calculator extends JFrame {
         });
 
         JButton equalsBtn = new JButton("=");
-        equalsBtn.setBackground(Color.ORANGE);
-        equalsBtn.setFont(new Font("Arial", Font.BOLD, 18));
+        equalsBtn.setBackground(Color.LIGHT_GRAY);
+        equalsBtn.setFont(new Font("Arial", Font.PLAIN, 18));
         equalsBtn.addActionListener(e -> executeCalculation());
 
-        panel.add(opButtons.get("("));   panel.add(opButtons.get(")"));   panel.add(backspaceBtn);       panel.add(clearBtn);
-        panel.add(digitButtons[1]);      panel.add(digitButtons[2]);      panel.add(digitButtons[3]);      panel.add(opButtons.get("+"));
-        panel.add(digitButtons[4]);      panel.add(digitButtons[5]);      panel.add(digitButtons[6]);      panel.add(opButtons.get("-"));
-        panel.add(digitButtons[7]);      panel.add(digitButtons[8]);      panel.add(digitButtons[9]);      panel.add(opButtons.get("×"));
-        panel.add(opButtons.get("."));   panel.add(digitButtons[0]);      panel.add(equalsBtn);            panel.add(opButtons.get("/"));
+        panel.add(opButtons.get("%"));
+        panel.add(opButtons.get("("));
+        panel.add(opButtons.get(")"));
+        panel.add(clearBtn);
+
+        panel.add(opButtons.get("1/x"));
+        panel.add(opButtons.get("x²"));
+        panel.add(opButtons.get("√"));
+        panel.add(backspaceBtn);
+
+        panel.add(digitButtons[1]);
+        panel.add(digitButtons[2]);
+        panel.add(digitButtons[3]);
+        panel.add(opButtons.get("+"));
+
+        panel.add(digitButtons[4]);
+        panel.add(digitButtons[5]);
+        panel.add(digitButtons[6]);
+        panel.add(opButtons.get("-"));
+
+        panel.add(digitButtons[7]);
+        panel.add(digitButtons[8]);
+        panel.add(digitButtons[9]);
+        panel.add(opButtons.get("×"));
+
+        panel.add(opButtons.get("."));
+        panel.add(digitButtons[0]);
+        panel.add(equalsBtn);
+        panel.add(opButtons.get("/"));
 
         this.add(panel, BorderLayout.CENTER);
     }
