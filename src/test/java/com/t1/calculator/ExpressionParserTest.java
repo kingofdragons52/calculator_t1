@@ -116,7 +116,7 @@ public class ExpressionParserTest {
 
     @Test
     public void testComplexAdvanced() {
-        String expression = "x²(2)+1/x(2)"; // 4 + 0.5
+        String expression = "x²(2)+1/x(2)";
         double result = RecursiveParser.evaluate(expression);
         assertEquals(4.5, result, 0.001);
     }
