@@ -1,4 +1,4 @@
-package com.t1.calculator;
+package main.java.com.t1.calculator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +15,7 @@ public class Calculator extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 500);
         setLocationRelativeTo(null);
-        setTitle("Calculator");
+        setTitle("Calculator (Shunting Yard)");
 
         text = new JTextField("0");
         text.setFont(new Font("Arial", Font.BOLD, 36));
@@ -80,7 +80,8 @@ public class Calculator extends JFrame {
 
         JButton clearBtn = new JButton("C");
         clearBtn.setBackground(Color.LIGHT_GRAY);
-        clearBtn.setFont(new Font("Arial", Font.PLAIN, 18));
+        clearBtn.setFont(new Font("Arial", Font.BOLD, 18));
+        clearBtn.setForeground(Color.BLACK);
         clearBtn.addActionListener(e -> text.setText("0"));
 
         JButton backspaceBtn = new JButton("⌫");
@@ -96,57 +97,34 @@ public class Calculator extends JFrame {
 
         JButton equalsBtn = new JButton("=");
         equalsBtn.setBackground(Color.LIGHT_GRAY);
-        equalsBtn.setFont(new Font("Arial", Font.PLAIN, 18));
+        equalsBtn.setFont(new Font("Arial", Font.BOLD, 18));
         equalsBtn.addActionListener(e -> executeCalculation());
 
-        panel.add(opButtons.get("%"));
-        panel.add(opButtons.get("("));
-        panel.add(opButtons.get(")"));
-        panel.add(clearBtn);
+        panel.add(opButtons.get("%"));   panel.add(opButtons.get("("));   panel.add(opButtons.get(")"));   panel.add(clearBtn);
+        panel.add(opButtons.get("1/x")); panel.add(opButtons.get("x²")); panel.add(opButtons.get("√"));   panel.add(backspaceBtn);
+        panel.add(digitButtons[1]);      panel.add(digitButtons[2]);      panel.add(digitButtons[3]);      panel.add(opButtons.get("+"));
+        panel.add(digitButtons[4]);      panel.add(digitButtons[5]);      panel.add(digitButtons[6]);      panel.add(opButtons.get("-"));
+        panel.add(digitButtons[7]);      panel.add(digitButtons[8]);      panel.add(digitButtons[9]);      panel.add(opButtons.get("×"));
+        panel.add(opButtons.get("."));   panel.add(digitButtons[0]);      panel.add(equalsBtn);            panel.add(opButtons.get("/"));
 
-        panel.add(opButtons.get("1/x"));
-        panel.add(opButtons.get("x²"));
-        panel.add(opButtons.get("√"));
-        panel.add(backspaceBtn);
+        this.add(panel, BorderLayout.CENTER);
 
-        panel.add(digitButtons[1]);
-        panel.add(digitButtons[2]);
-        panel.add(digitButtons[3]);
-        panel.add(opButtons.get("+"));
-
-        panel.add(digitButtons[4]);
-        panel.add(digitButtons[5]);
-        panel.add(digitButtons[6]);
-        panel.add(opButtons.get("-"));
-
-        panel.add(digitButtons[7]);
-        panel.add(digitButtons[8]);
-        panel.add(digitButtons[9]);
-        panel.add(opButtons.get("×"));
-
-        panel.add(opButtons.get("."));
-        panel.add(digitButtons[0]);
-        panel.add(equalsBtn);
-        panel.add(opButtons.get("/"));
-
-        // Навешиваем слушатель клавиатуры на само окно
         this.setFocusable(true);
         this.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyTyped(java.awt.event.KeyEvent e) {
                 char ch = e.getKeyChar();
                 String current = text.getText();
-
                 if (Character.isDigit(ch)) {
                     if (current.equals("0")) text.setText(String.valueOf(ch));
                     else text.setText(current + ch);
                 } else if (ch == '+' || ch == '-' || ch == '/' || ch == '(' || ch == ')' || ch == '.') {
                     text.setText(current.equals("0") && ch == '(' ? "(" : current + ch);
                 } else if (ch == '*') {
-                    text.setText(current + "×"); // Для визуала подменяем на красивый крестик
+                    text.setText(current + "×");
                 } else if (ch == '\n' || ch == '=') {
                     executeCalculation();
-                } else if (ch == '\b') { // Backspace
+                } else if (ch == '\b') {
                     if (current.length() > 0 && !current.equals("0")) {
                         String next = current.substring(0, current.length() - 1);
                         text.setText(next.isEmpty() ? "0" : next);
@@ -154,14 +132,12 @@ public class Calculator extends JFrame {
                 }
             }
         });
-
-        this.add(panel, BorderLayout.CENTER);
     }
 
     private void executeCalculation() {
         try {
             String expression = text.getText().replace("×", "*");
-            double result = RecursiveParser.evaluate(expression);
+            double result = ExpressionParser.evaluate(expression);
 
             if (result == (long) result) {
                 text.setText(String.valueOf((long) result));
@@ -171,7 +147,7 @@ public class Calculator extends JFrame {
         } catch (RuntimeException ex) {
             text.setText(ex.getMessage());
         } catch (Exception ex) {
-            text.setText("Ошибка ввода");
+            text.setText("Ошибка");
         }
     }
 }
